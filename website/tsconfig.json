@@ -6,7 +6,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "ignoreDeprecations": "6.0",
-    "strict": true
+    "strict": true,
+    // search.test.ts imports "./search.ts" with an explicit extension, since
+    // it also runs directly via Node's native TS stripping (`node --test`),
+    // which requires one for relative ESM specifiers. Valid alongside
+    // noEmit + moduleResolution "bundler", both already set upstream.
+    "allowImportingTsExtensions": true,
+    // search-preview.tsx imports the generated search-index.json directly.
+    "resolveJsonModule": true
   },
   "exclude": [".docusaurus", "build"]
 }

@@ -255,3 +255,143 @@ mark,
   background-color: var(--cd-panel);
   border: 1px solid var(--cd-hairline);
 }
+
+/* Category badge on a term page (generate-docs.ts), linking back to the
+   landing page filtered to that tag. */
+.term-category-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  color: var(--cd-muted);
+  font-family: var(--cd-font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.term-category-badge:hover {
+  color: var(--cd-accent);
+  border-color: var(--cd-accent);
+  text-decoration: none;
+}
+
+/* Search landing page (src/pages/search-preview.tsx). */
+.search-landing {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+}
+
+.search-landing__input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  border-radius: 0.5rem;
+  color: var(--cd-text);
+}
+
+.search-landing__word-of-day {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  border-radius: 0.75rem;
+}
+
+/* Gold is the brand's "warm signal" slot (see the mark/.search-result-match
+   rule above) — reused here so the day's featured term reads as a highlight,
+   not just another label. */
+.search-landing__word-of-day-label {
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cd-gold);
+}
+
+.search-landing__word-of-day-title {
+  display: block;
+  margin-top: 0.35rem;
+  font-family: var(--cd-font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.search-landing__word-of-day-teaser {
+  margin: 0.5rem 0 0;
+  color: var(--cd-muted);
+}
+
+.search-landing__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.search-landing__tag {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  color: var(--cd-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.search-landing__tag--active {
+  background: var(--cd-accent);
+  border-color: var(--cd-accent);
+  color: var(--cd-bg);
+}
+
+.search-landing__results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.search-landing__result {
+  border-bottom: 1px solid var(--cd-hairline);
+}
+
+.search-landing__result-link {
+  display: block;
+  padding: 0.85rem 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.search-landing__result-title {
+  display: block;
+  font-family: var(--cd-font-display);
+  font-weight: 600;
+  color: var(--cd-text);
+}
+
+.search-landing__result-link:hover .search-landing__result-title {
+  color: var(--cd-accent);
+}
+
+.search-landing__result-tag {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  color: var(--cd-muted);
+}
+
+.search-landing__result-teaser {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--cd-muted);
+  font-size: 0.9rem;
+}
+
+.search-landing__empty {
+  padding: 1rem 0;
+  color: var(--cd-muted);
+}
