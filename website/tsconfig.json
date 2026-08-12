@@ -12,7 +12,7 @@
     // which requires one for relative ESM specifiers. Valid alongside
     // noEmit + moduleResolution "bundler", both already set upstream.
     "allowImportingTsExtensions": true,
-    // search-preview.tsx imports the generated search-index.json directly.
+    // index.tsx imports the generated search-index.json directly.
     "resolveJsonModule": true
   },
   "exclude": [".docusaurus", "build"]

@@ -250,12 +250,6 @@ mark,
   font-size: 0.82rem;
 }
 
-/* Search input (docusaurus-search-local) picks up the panel color. */
-.navbar__search-input {
-  background-color: var(--cd-panel);
-  border: 1px solid var(--cd-hairline);
-}
-
 /* Category badge on a term page (generate-docs.ts), linking back to the
    landing page filtered to that tag. */
 .term-category-badge {

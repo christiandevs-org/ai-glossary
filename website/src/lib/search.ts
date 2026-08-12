@@ -2,7 +2,7 @@
  * Pure, framework-free search logic for the landing page — no React, no DOM
  * beyond the URL/URLSearchParams globals Node also provides natively, so this
  * is testable with plain `node:test`. The React component in
- * src/pages/search-preview.tsx is the only consumer with a DOM dependency.
+ * src/pages/index.tsx is the only consumer with a DOM dependency.
  */
 
 export type SearchIndexEntry = {

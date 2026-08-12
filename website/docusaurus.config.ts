@@ -53,17 +53,6 @@ const config: Config = {
     "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap",
   ],
 
-  themes: [
-    [
-      "@easyops-cn/docusaurus-search-local",
-      {
-        hashed: true,
-        indexBlog: false,
-        docsRouteBasePath: "/",
-      },
-    ],
-  ],
-
   presets: [
     [
       "classic",
@@ -99,17 +88,6 @@ const config: Config = {
     footer: {
       style: "dark",
       links: [
-        {
-          title: "Sections",
-          items: [
-            { label: "🛠️ Building & Ops", to: "/building-ops" },
-            { label: "📈 Business & Strategy", to: "/business-strategy" },
-            { label: "🔥 Culture & Vibes", to: "/culture-vibes" },
-            { label: "🤖 Model Behavior", to: "/model-behavior" },
-            { label: "💬 Prompting & Context", to: "/prompting-context" },
-            { label: "🔒 Security & Trust", to: "/security-trust" },
-          ],
-        },
         {
           title: "Links",
           items: [

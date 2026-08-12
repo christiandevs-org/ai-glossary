@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import Layout from "@theme/Layout";
 import Link from "@docusaurus/Link";
 import { useHistory, useLocation } from "@docusaurus/router";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
 import {
   filterTerms,
@@ -23,7 +24,8 @@ for (const entry of searchIndex) {
   }
 }
 
-export default function SearchPreview() {
+export default function Home() {
+  const { siteConfig } = useDocusaurusContext();
   const location = useLocation();
   const history = useHistory();
 
@@ -31,7 +33,8 @@ export default function SearchPreview() {
   const [tag, setTag] = useState<string | null>(() => parseUrlSearchState(location.search).tag);
 
   // Keep local state in sync when the URL changes from outside this
-  // component's own writes (back/forward, a pasted link).
+  // component's own writes (back/forward, a pasted link, the category badge
+  // on a term page linking to /?tag=<slug>).
   useEffect(() => {
     const next = parseUrlSearchState(location.search);
     setQuery(next.q);
@@ -68,7 +71,7 @@ export default function SearchPreview() {
   const results = useMemo(() => filterTerms(searchIndex, query, tag), [query, tag]);
 
   return (
-    <Layout title="Search" description="Look up a term in the AI glossary.">
+    <Layout title={siteConfig.title} description={siteConfig.tagline}>
       <main className="search-landing">
         <input
           type="search"
