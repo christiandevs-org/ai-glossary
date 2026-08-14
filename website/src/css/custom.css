@@ -185,7 +185,6 @@
   font-weight: 700;
   font-size: 1.15rem;
   letter-spacing: -0.03em;
-  text-transform: lowercase;
 }
 
 .navbar__brand:hover .navbar__title {
@@ -250,8 +249,374 @@ mark,
   font-size: 0.82rem;
 }
 
-/* Search input (docusaurus-search-local) picks up the panel color. */
-.navbar__search-input {
-  background-color: var(--cd-panel);
+/* Category badge on a term page (generate-docs.ts), linking back to the
+   landing page filtered to that tag. */
+.term-category-badge {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: var(--cd-panel);
   border: 1px solid var(--cd-hairline);
+  color: var(--cd-muted);
+  font-family: var(--cd-font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+}
+
+.term-category-badge:hover {
+  color: var(--cd-accent);
+  border-color: var(--cd-accent);
+  text-decoration: none;
+}
+
+/* Search landing page (src/pages/index.tsx). Two columns on wide viewports:
+   a centered search + word-of-day column, and a sticky scrollable sidebar
+   holding the full (tag-filterable, not search-filterable) term list. Search
+   is a jump-to-term typeahead, not a filter over the sidebar — selecting a
+   suggestion navigates straight to that term's page.
+
+   The container caps out wide instead of at reading-width (contrast the
+   48rem/22rem column caps below): a centered narrow container would leave
+   matching gutters on both sides, so the sidebar would float short of the
+   window's actual right edge on a wide desktop instead of hugging it. */
+.search-landing {
+  /* Infima's .main-wrapper is a flex row with this <main> as its only item
+     and no flex-grow set — without an explicit width it sizes to content
+     (i.e. shrinks to fit .search-landing__primary + the sidebar) instead of
+     filling the row, so max-width alone would never be reached. */
+  width: 100%;
+  max-width: 110rem;
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+}
+
+.search-landing__layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+@media (max-width: 900px) {
+  .search-landing__layout {
+    flex-direction: column;
+  }
+}
+
+.search-landing__primary {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+}
+
+/* On desktop the sidebar's long scrollable term list sets the column's
+   visual height, but the primary column only ever holds a handful of
+   elements — top-anchored, that left a large dead gap below the
+   word-of-day card. Centering the block within the space below the navbar
+   reads as an intentional composition instead of content stranded at the
+   top with empty space beneath it. Scoped to the same breakpoint the
+   two-column layout switches on (see .search-landing__layout above), so
+   this never reaches the stacked mobile layout, where a vh-based
+   min-height could push content off-screen on a short viewport. */
+@media (min-width: 901px) {
+  .search-landing__primary {
+    justify-content: center;
+    min-height: calc(100vh - var(--ifm-navbar-height) - 6rem);
+  }
+}
+
+/* Tighter than the gap to the card below (.search-landing__search) — the
+   blurb and the search box are one statement-then-action unit, not two
+   separate stack items. */
+/* Matches .markdown h1's letter-spacing so the one real heading on this page
+   reads as the same typographic voice as every term page's h1. */
+.search-landing__heading {
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 0 0.75rem;
+  font-size: 2.75rem;
+  letter-spacing: -0.03em;
+}
+
+.search-landing__description {
+  width: 100%;
+  max-width: 48rem;
+  margin-bottom: 1.75rem;
+  color: var(--cd-muted);
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+.search-landing__search {
+  position: relative;
+  width: 100%;
+  max-width: 48rem;
+  /* Wider gap than title's margin-bottom above — the word-of-day card is a
+     distinct module, not another line in the same statement-then-action unit. */
+  margin-bottom: 2.5rem;
+}
+
+.search-landing__input {
+  width: 100%;
+  padding: 0.95rem 1.25rem;
+  font-size: 1.2rem;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  border-radius: 0.5rem;
+  color: var(--cd-text);
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+/* No focus treatment existed before — browser-default outline is easy to
+   lose against --cd-panel in dark mode. Accent border + soft ring reuses the
+   existing token instead of a new color. */
+.search-landing__input:focus {
+  outline: none;
+  border-color: var(--cd-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cd-accent) 20%, transparent);
+}
+
+.search-landing__suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  border-radius: 0.5rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+  text-align: left;
+}
+
+.search-landing__suggestion {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.search-landing__suggestion--active {
+  background: var(--cd-bg);
+}
+
+.search-landing__suggestion-title {
+  font-family: var(--cd-font-display);
+  font-weight: 600;
+  color: var(--cd-text);
+}
+
+.search-landing__suggestion-tag {
+  flex-shrink: 0;
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  color: var(--cd-muted);
+}
+
+/* Vertical spacing above/below now comes from the sibling margins
+   (.search-landing__search's margin-bottom, .search-landing__primary's own
+   bottom padding) rather than a margin on the card itself — one source of
+   truth for the column's rhythm instead of two elements each claiming a gap.
+   The shadow — reusing the exact value .search-landing__suggestions already
+   uses — is what a plain hairline border couldn't do: without it this card
+   read as the same flat "chrome" as the search input and dropdown above it,
+   when it's actually the page's one piece of real content. */
+.search-landing__word-of-day {
+  width: 100%;
+  max-width: 48rem;
+  padding: 2rem 2.25rem;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+/* Gold is the brand's "warm signal" slot (see the mark/.search-result-match
+   rule above) — reused here so the day's featured term reads as a highlight,
+   not just another label. */
+.search-landing__word-of-day-label {
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cd-gold);
+}
+
+/* Title + category pill share a row now (see index.tsx) — bumped up from
+   1.4rem since the pill sitting next to it, rather than stacked below,
+   gives the row enough width to carry a larger headline without crowding. */
+.search-landing__word-of-day-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+
+.search-landing__word-of-day-title {
+  font-family: var(--cd-font-display);
+  font-size: 1.85rem;
+  font-weight: 700;
+}
+
+/* Category pill, matching the term page's own badge (.term-category-badge)
+   so the same "this is a category" affordance reads the same everywhere.
+   flex-shrink: 0 keeps it whole if a long term title crowds the row. */
+.search-landing__word-of-day-category {
+  flex-shrink: 0;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--cd-bg);
+  border: 1px solid var(--cd-hairline);
+  color: var(--cd-muted);
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+}
+
+/* Same hairline-rule device .markdown h3 uses to separate a term's heading
+   from its content — reused here so the card's header/body split reads as
+   the same pattern as everywhere else terms are rendered. */
+.search-landing__word-of-day-body {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--cd-hairline);
+}
+
+/* "Definition" / "Usage" — deliberately not gold: gold is spent once per
+   card on the "Word of the day" kicker above (see the mark/.search-result-match
+   rule), so a second and third gold label here would dilute that signal
+   instead of reinforcing it. */
+.search-landing__word-of-day-section-label {
+  margin-top: 1rem;
+  font-family: var(--cd-font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cd-muted);
+}
+
+/* First label sits directly under .search-landing__word-of-day-body's own
+   padding-top — without this it'd stack on top of that padding for a
+   double-wide gap only "Definition" (not "Usage") would have. */
+.search-landing__word-of-day-body > .search-landing__word-of-day-section-label:first-child {
+  margin-top: 0;
+}
+
+.search-landing__word-of-day-definition {
+  margin: 0.35rem 0 0;
+  color: var(--cd-text);
+}
+
+/* Quoted-speech treatment as term pages' usage blockquote (.markdown
+   blockquote) minus its left rule — the card already carries its own border
+   and shadow, so a second rule on top of Usage read as visual clutter. */
+.search-landing__word-of-day-quote {
+  margin: 0.35rem 0 0;
+  color: var(--cd-text);
+  font-family: var(--cd-font-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Right column: fixed width and non-shrinking so it holds its place flush
+   against the container's right edge as the primary column's flexible width
+   changes, and sticky below the navbar so the list stays put while the page
+   (which has no other scrollable content) is browsed. */
+.search-landing__sidebar {
+  position: sticky;
+  top: 1.5rem;
+  flex: 0 0 22rem;
+  width: 22rem;
+  max-height: calc(100vh - 3rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .search-landing__sidebar {
+    position: static;
+    max-height: none;
+    flex: 1 1 auto;
+    width: auto;
+  }
+}
+
+.search-landing__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+
+.search-landing__tag {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--cd-panel);
+  border: 1px solid var(--cd-hairline);
+  color: var(--cd-text);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.search-landing__tag--active {
+  background: var(--cd-accent);
+  border-color: var(--cd-accent);
+  color: var(--cd-bg);
+}
+
+.search-landing__results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.search-landing__result {
+  border-bottom: 1px solid var(--cd-hairline);
+}
+
+.search-landing__result-link {
+  display: block;
+  padding: 0.85rem 0;
+  text-decoration: none;
+  color: inherit;
+}
+
+.search-landing__result-title {
+  display: block;
+  font-family: var(--cd-font-display);
+  font-weight: 600;
+  color: var(--cd-text);
+}
+
+.search-landing__result-link:hover .search-landing__result-title {
+  color: var(--cd-accent);
+}
+
+.search-landing__result-tag {
+  display: inline-block;
+  margin-top: 0.2rem;
+  font-family: var(--cd-font-mono);
+  font-size: 0.75rem;
+  color: var(--cd-muted);
+}
+
+.search-landing__result-teaser {
+  display: block;
+  margin-top: 0.2rem;
+  color: var(--cd-muted);
+  font-size: 0.9rem;
+}
+
+.search-landing__empty {
+  padding: 1rem 0;
+  color: var(--cd-muted);
 }
