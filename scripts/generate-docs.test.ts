@@ -170,6 +170,19 @@ test("buildTermPageContent produces frontmatter, category badge, and rewritten r
   assert.match(content, /\[Eval\]\(\.\.\/terms\/eval\)/);
 });
 
+test("buildTermPageContent adds Definition and Example subheaders ahead of their blocks", () => {
+  const terms = termsFor("clean");
+  const anchorMap = buildAnchorMap(terms);
+  const agentic = terms.find((t) => t.title === "Agentic / agent loop")!;
+  const content = buildTermPageContent(agentic, anchorMap);
+
+  assert.match(
+    content,
+    /### Definition\n\nModel runs in a cycle instead of returning one answer\./,
+  );
+  assert.match(content, /### Example\n\n> "It's not agentic/);
+});
+
 test("buildSearchIndex produces one entry per term with category, teaser, and stripped quote", () => {
   const terms = termsFor("clean");
   const index = buildSearchIndex(terms);

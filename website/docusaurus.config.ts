@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const GITHUB_ORG = "https://github.com/christiandevs-org";
 const GITHUB_REPO = "ai-glossary";
 const DOMAIN = "https://glossary.christiandevs.org";
-const PAGE_TITLE = "AI Slang Dictionary";
+const PAGE_TITLE = "AI & Dev Slang Glossary";
 const PAGE_TAGLINE =
   "A curated guide to modern AI developer slang, LLM jargon, and engineering terminology";
 
@@ -60,7 +60,11 @@ const config: Config = {
         docs: {
           routeBasePath: "/",
           sidebarPath: "./sidebars.ts",
-          editUrl: `${GITHUB_ORG}/${GITHUB_REPO}/blob/main/CONTRIBUTING.md`,
+          // No editUrl: term pages are generated from README.md, so an
+          // "Edit this page" link pointing at the rendered doc 404s.
+          // Contributing happens via PR against README.md (see the footer's
+          // Contribute link), not an in-place doc edit.
+          editUrl: undefined,
         },
         blog: false,
         theme: {
