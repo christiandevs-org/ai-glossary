@@ -17,6 +17,7 @@
  * are deliberately not approximated here.
  */
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 export type Severity = "error" | "warn";
 
@@ -666,4 +667,6 @@ function main(): void {
   process.exit(errors.length > 0 ? 1 : 0);
 }
 
-if (import.meta.main) main();
+// Not `import.meta.main`: tsx leaves it undefined, which would make the linter
+// exit 0 without checking anything.
+if (process.argv[1] === fileURLToPath(import.meta.url)) main();

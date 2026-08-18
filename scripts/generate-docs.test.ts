@@ -9,7 +9,8 @@
  */
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -203,6 +204,25 @@ test("buildSearchIndex keeps disambiguated terms distinct", () => {
   const slugs = index.map((e) => e.slug);
   assert.ok(slugs.includes("churn-code"));
   assert.ok(slugs.includes("churn-customer"));
+});
+
+test("running the script as a CLI writes the docs the site build needs", () => {
+  // The site build shells out via `npx tsx scripts/generate-docs.ts`, and tsx
+  // does not define `import.meta.main` — a guard on it makes the script exit 0
+  // having written nothing, so Docusaurus then fails with "The docs folder does
+  // not exist". Run it the way the build does and assert it actually wrote.
+  const script = join(here, "generate-docs.ts");
+  const result = spawnSync("npx", ["tsx", script], {
+    encoding: "utf8",
+    cwd: join(here, ".."),
+  });
+
+  assert.equal(result.status, 0, result.stderr);
+  const termsDir = join(here, "..", "website", "docs", "terms");
+  assert.ok(
+    readdirSync(termsDir).some((f) => f.endsWith(".md")),
+    "expected generated term pages in website/docs/terms",
+  );
 });
 
 test("parseTerms handles the reference.md fixture's same-section related terms", () => {
