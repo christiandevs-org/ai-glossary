@@ -264,4 +264,6 @@ const generateDocs = () => {
   console.log(`  ✓ search-index.json (${searchIndex.length} terms)`);
 };
 
-if (import.meta.main) generateDocs();
+// Not `import.meta.main`: tsx (which the site build uses) leaves it undefined,
+// so the script would exit 0 having written nothing.
+if (process.argv[1] === fileURLToPath(import.meta.url)) generateDocs();
